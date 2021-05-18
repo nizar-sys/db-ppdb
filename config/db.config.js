@@ -6,7 +6,7 @@ const conn = mysql2.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "db_barbershop",
+  database: "db_ppdb",
 });
 
 conn.connect((err) => {

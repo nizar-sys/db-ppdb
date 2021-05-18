@@ -1,8 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const UserController = require('../controllers/User.controller');
+const pendaftaran = require("../controllers/pendaftaranController");
 
-router.get("/api/user", UserController.listUser);
-router.get("/api/user/:id", UserController.detailUser);
-router.post("/api/user", UserController.createUser);
+router.get("/api/daftar", pendaftaran.ListPendaftar);
+router.get("/api/daftar/:id", pendaftaran.Detail);
+router.post("/api/daftar", pendaftaran.tambahPendaftar);
+router.put("/api/daftar/:id", pendaftaran.editPendaftar);
+router.delete("/api/daftar/:id", pendaftaran.hapusPendaftar);
+
 module.exports = router;
