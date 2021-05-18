@@ -1,41 +1,51 @@
 const conn = require("../config/db.config");
 
+// LIST USER
 exports.listUser = (req, res) => {
-  let sql = "SELECT * FROM user";
+  let sql = "SELECT * FROM user ORDER BY user_id DESC";
   conn.query(sql, (err, result) => {
     if (err) throw err;
     res.send(
       JSON.stringify({
         status: true,
-        result: result,
-        github: "https://github.com/nizar-sys",
+        data: result,
       })
     );
   });
 };
 
+// DETAIL USER
 exports.detailUser = (req, res) => {
   let id = req.params.id;
-  let sql = `SELECT * FROM user WHERE uid = ${id}`;
+  let sql = `SELECT * FROM user WHERE user_id = ${id}`;
   conn.query(sql, (err, result) => {
     if (err) throw err;
+    if (result.length === 0) {
+      res.send(
+        JSON.stringify({
+          status: false,
+          message: "User by Id not found",
+        })
+      );
+      return;
+    }
     res.send(
       JSON.stringify({
         status: true,
         result: result,
-        github: "https://github.com/nizar-sys",
       })
     );
   });
 };
 
-exports.createUser = (req, res) => {
+// TAMBAH USER
+exports.tambahUser = (req, res) => {
   let data = {
-    uid: req.body.uid,
-    role: req.body.role,
+    user_id: req.body.user_id,
     username: req.body.username,
-    fullname: req.body.fullname,
     password: req.body.password,
+    role: req.body.role,
+    pendaftaran_id: req.body.pendaftaran_id,
   };
   let sql = `INSERT INTO user SET ? `;
   let query = conn.query(sql, data, (err, result) => {
@@ -49,5 +59,31 @@ exports.createUser = (req, res) => {
         })
       );
     }
+  });
+};
+
+// EDIT USER
+exports.editUser = (req, res) => {
+  let sql = `UPDATE user SET username = '${req.body.username}', password = '${req.body.password}', role = '${req.body.role}' WHERE user_id = '${req.params.id}'`;
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(
+      JSON.stringify({
+        status: true,
+        message: "Data user berhasil diubah",
+        data: results,
+      })
+    );
+  });
+};
+
+// HAPUS USER
+exports.hapusUser = (req, res) => {
+  let sql = `DELETE FROM user WHERE user_id='${req.params.id}'`;
+  let query = conn.query(sql, (err, results) => {
+    if (err) throw err;
+    res.send(
+      JSON.stringify({ status: true, message: "Data user berhasil dihapus" })
+    );
   });
 };
